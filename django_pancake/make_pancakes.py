@@ -6,8 +6,7 @@ def template_names(input_dir, prefix=''):
         template_name = os.path.join(prefix, filename)
         full_name = os.path.join(input_dir, filename)
         if os.path.isdir(full_name):
-            for name in template_names(full_name, template_name):
-                yield name
+            yield from template_names(full_name, template_name)
         else:
             yield template_name
 

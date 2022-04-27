@@ -85,7 +85,7 @@ TESTS = {
     'comments2': ('lo{# Short-style comment #}ve', 'love'),
     'comments3': ('lo{% comment %}{% if foo %}foo{% else %}bar{% endif %}{# Inner comment #}Some other stuff{% endcomment %}ve', 'love'),
 }
-TEMPLATES = dict((k, v[0]) for k, v in TESTS.items())
+TEMPLATES = {k: v[0] for k, v in TESTS.items()}
 
 def test_flatten():
     for template_name, (template_source, pancake_source) in TESTS.items():

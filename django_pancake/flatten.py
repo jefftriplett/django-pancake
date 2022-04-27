@@ -12,13 +12,12 @@ class ASTNode(object):
         self.leaves = [] # Each leaf can be a string or another ASTNode.
 
     def __repr__(self):
-        return '<%s %s>' % (self.__class__.__name__, self.name)
+        return f'<{self.__class__.__name__} {self.name}>'
 
     def sub_text(self):
         for leaf in self.leaves:
             if isinstance(leaf, ASTNode):
-                for subleaf in leaf.sub_text():
-                    yield subleaf
+                yield from leaf.sub_text()
             else:
                 yield leaf
 
@@ -26,8 +25,7 @@ class ASTNode(object):
         for leaf in self.leaves:
             if isinstance(leaf, ASTNode):
                 yield leaf
-                for subleaf in leaf.sub_nodes():
-                    yield subleaf
+                yield from leaf.sub_nodes()
 
 class Template(ASTNode):
     "Root node of the AST. Represents a template, which may or may not have a parent."
@@ -90,7 +88,7 @@ class Parser(object):
                     tag_name, arg = token.contents.split(None, 1)
                 except ValueError:
                     tag_name, arg = token.contents.strip(), None
-                method_name = 'do_%s' % tag_name
+                method_name = f'do_{tag_name}'
                 if hasattr(self, method_name):
                     getattr(self, method_name)(arg)
                 else:
@@ -115,11 +113,10 @@ class Parser(object):
     def do_extends(self, text):
         if not text:
             raise PancakeFail('{%% extends %%} without an argument (file: %r)' % self.root.name)
-        if text[0] in ('"', "'"):
-            parent_name = text[1:-1]
-            self.root.parent = Parser().parse(parent_name, self.templates)
-        else:
+        if text[0] not in ('"', "'"):
             raise PancakeFail('Variable {%% extends %%} tags are not supported (file: %r)' % self.root.name)
+        parent_name = text[1:-1]
+        self.root.parent = Parser().parse(parent_name, self.templates)
 
     def do_comment(self, text):
         # Consume all tokens until 'endcomment'
@@ -140,25 +137,22 @@ class Parser(object):
 
     def do_include(self, text):
         if ' only' in text:
-            if self.fail_gracefully:
-                self.current.leaves.append('{%% include %s %%}' % text)
-                return
-            else:
+            if not self.fail_gracefully:
                 raise PancakeFail('{%% include %%} tags containing "only" are not supported (file: %r)' % self.root.name)
+            self.current.leaves.append('{%% include %s %%}' % text)
+            return
         try:
             template_name, rest = text.split(None, 1)
         except ValueError:
             template_name, rest = text, ''
-        if not template_name[0] in ('"', "'"):
+        if template_name[0] not in ('"', "'"):
             if self.fail_gracefully:
                 self.current.leaves.append('{%% include %s %%}' % text)
                 return
             else:
                 raise PancakeFail('Variable {%% include %%} tags are not supported (file: %r)' % self.root.name)
         template_name = template_name[1:-1]
-        if rest.startswith('with '):
-            rest = rest[5:]
-
+        rest = rest.removeprefix('with ')
         include_node = Parser().parse(template_name, self.templates)
 
         # Add {% load %} tags from the included template.
