@@ -11,8 +11,9 @@
     just --fmt --unstable
 
 @lint:
-    black .
-    blacken-docs ./README.rst
+    # black .
+    # blacken-docs ./README.rst
+    just pre-commit
 
 @pre-commit:
     git ls-files -- . | xargs pre-commit run --config=.pre-commit-config.yaml --files
