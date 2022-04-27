@@ -1,4 +1,6 @@
 prune tests
 exclude .pre-commit-config.yaml
+exclude .sourcery.yaml
 exclude bumpver.toml
 exclude justfile
+exclude requirements.txt
