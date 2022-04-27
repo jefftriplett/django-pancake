@@ -8,7 +8,7 @@ version_pattern = "YYYY.MM.INC1"
 
 [bumpver.file_patterns]
 "setup.cfg" = [
-    "version = 2022.4.1",
+    "version = {version}",
 ]
 "bumpver.toml" = [
     'current_version = "{version}"',
