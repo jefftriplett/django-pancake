@@ -1,0 +1,15 @@
+[bumpver]
+commit = true
+commit_message = ":bookmark: bump version {old_version} -> {new_version}"
+current_version = "2022.4.1"
+push = true
+tag = true
+version_pattern = "YYYY.MM.INC1"
+
+[bumpver.file_patterns]
+"setup.cfg" = [
+    "version = 2022.4.1",
+]
+"bumpver.toml" = [
+    'current_version = "{version}"',
+]
