@@ -38,6 +38,7 @@ jobs:
       - name: Set up project
         run: |
           python -m pip install .
+
       - name: Run tests
         run: |
           pipx run pytest .
