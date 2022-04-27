@@ -87,7 +87,7 @@ class Parser:
                 if token.contents == "block.super":
                     if self.root.parent is None:
                         raise PancakeFail(
-                            "Got {{ block.super }} in a template that has no parent"
+                            "Got {{ block.super }} in a template that has no parent",
                         )
 
                     super_block_name = self.stack[-1].name
@@ -95,7 +95,7 @@ class Parser:
                     while current_par is not None:
                         if super_block_name in current_par.blocks:
                             self.current.leaves.extend(
-                                current_par.blocks[super_block_name].leaves
+                                current_par.blocks[super_block_name].leaves,
                             )
                             break
                         current_par = current_par.parent
@@ -132,7 +132,7 @@ class Parser:
     def do_extends(self, text):
         if not text:
             raise PancakeFail(
-                "{%% extends %%} without an argument (file: %r)" % self.root.name
+                "{%% extends %%} without an argument (file: %r)" % self.root.name,
             )
         if text[0] in ('"', "'"):
             parent_name = text[1:-1]
@@ -140,7 +140,7 @@ class Parser:
         else:
             raise PancakeFail(
                 "Variable {%% extends %%} tags are not supported (file: %r)"
-                % self.root.name
+                % self.root.name,
             )
 
     def do_comment(self, text):
@@ -168,7 +168,7 @@ class Parser:
             else:
                 raise PancakeFail(
                     '{%% include %%} tags containing "only" are not supported (file: %r)'
-                    % self.root.name
+                    % self.root.name,
                 )
         try:
             template_name, rest = text.split(None, 1)
@@ -181,7 +181,7 @@ class Parser:
             else:
                 raise PancakeFail(
                     "Variable {%% include %%} tags are not supported (file: %r)"
-                    % self.root.name
+                    % self.root.name,
                 )
         template_name = template_name[1:-1]
         if rest.startswith("with "):
