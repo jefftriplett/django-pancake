@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 import os
 import sys
-import click
 from pathlib import Path
-from .flatten import flatten, TemplateDirectory
+
+import click
+
+from .flatten import TemplateDirectory, flatten
 
 
 def template_names(*, input_dir: str, prefix: str = ""):

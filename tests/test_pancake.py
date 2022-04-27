@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django_pancake.flatten import flatten
 
 # template_name: (template_source, pancake_source),

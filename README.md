@@ -89,7 +89,7 @@ I disabled it. But, who knows, it might help somebody else.
 2.  Point Django at the pancake directory:
     ```python
     TEMPLATE_DIRS = [
-        '/path/to/pancake/directory',
+        "/path/to/pancake/directory",
     ]
     ```
 
