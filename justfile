@@ -15,6 +15,9 @@
     # blacken-docs ./README.rst
     just pre-commit
 
+@pip-compile:
+    pip-compile -r ./requirements.in
+
 @pre-commit:
     git ls-files -- . | xargs pre-commit run --config=.pre-commit-config.yaml --files
 
