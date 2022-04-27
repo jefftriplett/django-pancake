@@ -1,0 +1,4 @@
+prune tests
+exclude .pre-commit-config.yaml
+exclude bumpver.toml
+exclude justfile
