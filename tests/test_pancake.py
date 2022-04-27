@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from django_pancake.flatten import flatten
 
-# template_name: (template_source, pancake_source),
+# template_name: (template_source, expected_pancake_output),
 TESTS = {
     # No inheritance.
     "test1": ("Some text here", "Some text here"),
@@ -169,11 +171,8 @@ TESTS = {
 TEMPLATES = {k: v[0] for k, v in TESTS.items()}
 
 
-def test_flatten():
-    for template_name, (template_source, pancake_source) in TESTS.items():
-        yield check_flatten, template_name, pancake_source
-
-
-def check_flatten(template_name, expected):
+@pytest.mark.parametrize("template_name", TESTS)
+def test_with_pytest(template_name):
+    template_source, expected = TESTS[template_name]
     result = flatten(template_name, TEMPLATES)
-    assert result == expected, f"expected {expected!r}, got {result!r}"
+    assert result == expected

@@ -236,7 +236,7 @@ def flatten_ast(template):
     return master
 
 
-def flatten(template_name, templates):
+def flatten(template_name: str, templates: list[str]):
     p = Parser()
     template = p.parse(template_name, templates)
     flat = flatten_ast(template)
