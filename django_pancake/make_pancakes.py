@@ -1,36 +1,35 @@
 import os
 import sys
-
+import click
+from pathlib import Path
 from .flatten import flatten, TemplateDirectory
 
 
-def template_names(input_dir, prefix=""):
+def template_names(*, input_dir: str, prefix: str = ""):
     for filename in os.listdir(input_dir):
         template_name = os.path.join(prefix, filename)
         full_name = os.path.join(input_dir, filename)
         if os.path.isdir(full_name):
-            yield from template_names(full_name, template_name)
+            yield from template_names(input_dir=full_name, prefix=template_name)
         else:
             yield template_name
 
 
-def make_pancakes(input_dir, output_dir):
+def make_pancakes(*, input_dir: str, output_dir: str):
     templates = TemplateDirectory(input_dir)
-    for template_name in template_names(input_dir):
-        print("Writing %s" % template_name)
+    for template_name in template_names(input_dir=input_dir):
+        click.echo(f"Writing {template_name}")
         pancake = flatten(template_name, templates)
-        outfile = os.path.join(output_dir, template_name)
-        try:
-            os.makedirs(os.path.dirname(outfile))
-        except OSError:  # Already exists.
-            pass
-        with open(outfile, "w") as fp:
-            fp.write(pancake)
+        outfile = Path(output_dir, template_name)
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        outfile.write_text(pancake)
 
 
-def main():
-    print(sys.argv)
-    make_pancakes(sys.argv[1], sys.argv[2])
+@click.command()
+@click.argument("input_dir")
+@click.argument("output_dir")
+def main(input_dir, output_dir):
+    make_pancakes(input_dir=input_dir, output_dir=output_dir)
 
 
 if __name__ == "__main__":
