@@ -4,6 +4,9 @@
 @build:
     python -m build
 
+@bump:
+    pipx run bumpver update --no-fetch --verbose
+
 @check:
     twine check dist/*
 
